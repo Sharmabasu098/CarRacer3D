@@ -50,7 +50,7 @@ export function updateRoad() {
 
   laneLines.forEach(line => {
 
-    line.position.z += 0.4;
+    line.position.z += 0.45;
 
     if (line.position.z > 5) {
       line.position.z = -195;
