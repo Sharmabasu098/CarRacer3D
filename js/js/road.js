@@ -1,31 +1,61 @@
-
 import * as THREE from "three";
+import { scene } from "./scene.js";
 
-export const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x87ceeb);
+export const laneLines = [];
 
-export const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
+export function createRoad() {
 
-camera.position.set(0, 6, 10);
+  // Ground
+  const ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(200, 200),
+    new THREE.MeshLambertMaterial({
+      color: 0x2e8b57
+    })
+  );
 
-export const renderer = new THREE.WebGLRenderer({
-  antialias: true
-});
+  ground.rotation.x = -Math.PI / 2;
+  scene.add(ground);
 
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
+  // Road
+  const road = new THREE.Mesh(
+    new THREE.PlaneGeometry(8, 200),
+    new THREE.MeshLambertMaterial({
+      color: 0x222222
+    })
+  );
 
-document.body.appendChild(renderer.domElement);
+  road.rotation.x = -Math.PI / 2;
+  road.position.y = 0.01;
+  scene.add(road);
 
-// Lights
-const ambient = new THREE.AmbientLight(0xffffff, 1);
-scene.add(ambient);
+  // Lane Lines
+  for (let i = 0; i < 40; i++) {
 
-const sun = new THREE.DirectionalLight(0xffffff, 2);
-sun.position.set(10, 20, 10);
-scene.add(sun);
+    const line = new THREE.Mesh(
+      new THREE.PlaneGeometry(0.2, 2),
+      new THREE.MeshBasicMaterial({
+        color: 0xffffff
+      })
+    );
+
+    line.rotation.x = -Math.PI / 2;
+    line.position.set(0, 0.02, -i * 5);
+
+    scene.add(line);
+    laneLines.push(line);
+  }
+}
+
+export function updateRoad() {
+
+  laneLines.forEach(line => {
+
+    line.position.z += 0.4;
+
+    if (line.position.z > 5) {
+      line.position.z = -195;
+    }
+
+  });
+
+}
